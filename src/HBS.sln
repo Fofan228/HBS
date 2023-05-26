@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBS.Core", "HBS.Core\HBS.Core.csproj", "{F557DFF4-1FC9-4BB9-B16B-518FA14B02F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBS.Data", "HBS.Data\HBS.Data.csproj", "{929137E5-7644-4E74-BC61-0D642CB8FB97}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBS.Service", "HBS.Service\HBS.Service.csproj", "{860A1283-45CC-433D-A518-59369D0AF606}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F557DFF4-1FC9-4BB9-B16B-518FA14B02F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F557DFF4-1FC9-4BB9-B16B-518FA14B02F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F557DFF4-1FC9-4BB9-B16B-518FA14B02F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F557DFF4-1FC9-4BB9-B16B-518FA14B02F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{929137E5-7644-4E74-BC61-0D642CB8FB97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{929137E5-7644-4E74-BC61-0D642CB8FB97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{929137E5-7644-4E74-BC61-0D642CB8FB97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{929137E5-7644-4E74-BC61-0D642CB8FB97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{860A1283-45CC-433D-A518-59369D0AF606}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{860A1283-45CC-433D-A518-59369D0AF606}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{860A1283-45CC-433D-A518-59369D0AF606}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{860A1283-45CC-433D-A518-59369D0AF606}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
