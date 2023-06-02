@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace HBS.Core.Models
 {
     public class NearbyPlacesModel
     {
-        
+        public static List<NearbyPlaceModel> NearbyPlaces { get; set; }
     }
 }
