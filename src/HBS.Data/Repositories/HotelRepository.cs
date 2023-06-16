@@ -1,33 +1,31 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+using HBS.Core.Common.Repositories.Interfaces;
 using HBS.Core.Models;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace HBS.Data.Repositories
 {
-    public class HotelRepository
+    public class HotelRepository : IHotelRepository
     {
         private readonly HotelContext _context;
 
-        public HotelRepository()
+        public HotelRepository(HotelContext context)
         {
-            _context = new HotelContext();
+            _context = context;
         }
 
-        public List<HotelModel> GetHotelsByRating(float minRating)
+        public IAsyncEnumerable<HotelModel> GetHotelsByRating()
         {
             return _context.Hotels
-                .Where(hotel => hotel.Rating >= minRating)
-                .ToList();
+                .OrderByDescending(hotel => hotel.Rating)
+                .AsAsyncEnumerable();
         }
 
-        public List<NearbyPlaceModel> GetRecommendedPlaces(long longitude, long latitude)
+        public IAsyncEnumerable<NearbyPlaceModel> GetRecommendedPlaces(long longitude, long latitude)
         {
             return _context.NearbyPlaces
                 .Where(place => place.Longitude == longitude && place.Latitude == latitude)
-                .ToList();
+                .AsAsyncEnumerable();
         }
     }
 }

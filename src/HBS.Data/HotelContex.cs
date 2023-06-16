@@ -1,18 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using HBS.Core.Models;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
+using Microsoft.Extensions.Configuration;
 
 namespace HBS.Data
 {
 
     public class HotelContext : DbContext
     {
+        public const string ConnectionStringName = "HotelDb";
+
         public DbSet<HotelModel> Hotels { get; set; }
         public DbSet<NearbyPlaceModel> NearbyPlaces { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public static void Configure(DbContextOptionsBuilder optionsBuilder, IConfiguration configuration)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=postgres;");
+            optionsBuilder.UseNpgsql(configuration.GetConnectionString(ConnectionStringName));
         }
     }
 }
