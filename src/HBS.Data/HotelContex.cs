@@ -9,6 +9,11 @@ namespace HBS.Data
     {
         public const string ConnectionStringName = "HotelDb";
 
+        public HotelContext(DbContextOptions options) : base(options)
+        {
+            
+        }
+
         public DbSet<HotelModel> Hotels { get; set; }
         public DbSet<NearbyPlaceModel> NearbyPlaces { get; set; }
 
