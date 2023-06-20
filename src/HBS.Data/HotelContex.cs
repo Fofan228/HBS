@@ -10,7 +10,7 @@ namespace HBS.Data
         public const string ConnectionStringName = "HotelDb";
 
         public DbSet<HotelModel> Hotels { get; set; }
-        public DbSet<NearbyPlaceModel> NearbyPlaces { get; set; }
+        // public DbSet<NearbyPlaceModel> NearbyPlaces { get; set; }
 
         public static void Configure(DbContextOptionsBuilder optionsBuilder, IConfiguration configuration)
         {

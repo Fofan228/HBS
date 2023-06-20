@@ -2,12 +2,12 @@ namespace HBS.Core.BusinessLogic;
 
 public class Coordinate
 {
-    private long _longitude;
-    private long _latitude;
+    public double Longitude;
+    public double Latitude;
 
-    public Coordinate(long longitude, long latitude)
+    public Coordinate(double longitude, double latitude)
     {
-        _longitude = longitude;
-        _latitude = latitude;
+        Longitude = longitude;
+        Latitude = latitude;
     }
 }
