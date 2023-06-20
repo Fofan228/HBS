@@ -21,11 +21,5 @@ namespace HBS.Data.Repositories
                 .AsAsyncEnumerable();
         }
 
-        public IAsyncEnumerable<NearbyPlaceModel> GetRecommendedPlaces(long longitude, long latitude)
-        {
-            return _context.NearbyPlaces
-                .Where(place => place.Longitude == longitude && place.Latitude == latitude)
-                .AsAsyncEnumerable();
-        }
     }
 }

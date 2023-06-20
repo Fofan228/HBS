@@ -3,11 +3,23 @@ namespace HBS.Core.Models
 {
     public class HotelModel
     {
-        public int Id { get; set; }
-        public string Address { get; set; }
-        public string HotelName { get; set; }
-        public float Rating { get; set; }
-        public float Longitude { get; set; }
-        public float Latitude { get; set; }
+        public HotelModel(long id, string address, string hotelName, double rating, double longitude, double latitude)
+        {
+            Id = id;
+            Address = address;
+            HotelName = hotelName;
+            Rating = rating;
+            Longitude = longitude;
+            Latitude = latitude;
+        }
+
+        private HotelModel() { }
+        
+        public long Id { get; set; }
+        public string Address { get; set; } = null!;
+        public string HotelName { get; set; } = null!;
+        public double Rating { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
     }
 }
