@@ -1,15 +1,20 @@
-using HBS.Core.BusinessLogic;
 using HBS.Core.Models;
 
 namespace HBS.Core.Common.Repositories.Interfaces;
 
 public interface IHotelManager
 {
-    IAsyncEnumerable<HotelModel> OrderHotelsByRating();
+    //TODO Предложеный вариант
+    IAsyncEnumerable<HotelModel> GetHotelsByRating(Coordinate coordinate, double radius, CancellationToken cancellationToken = default);
 
-    IAsyncEnumerable<HotelModel> GetNearbyHotels(Coordinate coordinate, double radius);
+    //TODO Предложеный вариант
+    Task<HotelModel> GetNearestHotel(Coordinate coordinate, double radius,  CancellationToken cancellationToken = default);
+    
+    // IAsyncEnumerable<HotelModel> GetHotelsByRating(CancellationToken cancellationToken = default);
 
-    Task<HotelModel> GetBestHotel(Coordinate coordinate, double radius);
+    IAsyncEnumerable<HotelModel> GetNearbyHotels(Coordinate coordinate, double radius, CancellationToken cancellationToken = default);
 
-    Task<HotelModel> GetNearestHotel(Coordinate coordinate);
+    Task<HotelModel> GetBestHotel(Coordinate coordinate, double radius, CancellationToken cancellationToken = default);
+
+    // Task<HotelModel> GetNearestHotel(Coordinate coordinate, CancellationToken cancellationToken = default);
 }

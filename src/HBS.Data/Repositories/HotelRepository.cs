@@ -1,4 +1,3 @@
-using HBS.Core.BusinessLogic;
 using HBS.Core.Common.Repositories.Interfaces;
 using HBS.Core.Models;
 
@@ -15,17 +14,24 @@ namespace HBS.Data.Repositories
             _context = context;
         }
 
-        public IAsyncEnumerable<HotelModel> GetHotelsByRating()
+        //TODO Возможно такое решение?
+        public IAsyncEnumerable<HotelModel> GetHotelsByRating(Coordinate coordinate, double radius)
         {
+            double CalculateDistance(double lo, double la)
+                => Math.Sqrt(Math.Pow(lo - coordinate.Longitude, 2) + Math.Pow(la - coordinate.Latitude, 2));
+
+            var checkRadius = (double lo, double la) => CalculateDistance(lo, la) <= radius;
+
             return _context.Hotels
+                .Where(hotel => checkRadius(coordinate.Longitude, coordinate.Latitude))
                 .OrderByDescending(hotel => hotel.Rating)
                 .AsAsyncEnumerable();
         }
 
-        public IAsyncEnumerable<HotelModel> OrderHotelsByRating()
+        public IAsyncEnumerable<HotelModel> GetHotelsByRating()
         {
             return _context.Hotels
-                .OrderBy(hotel => hotel.Rating)
+                .OrderByDescending(hotel => hotel.Rating)
                 .AsAsyncEnumerable();
         }
 
@@ -35,14 +41,24 @@ namespace HBS.Data.Repositories
                 Math.Sqrt(Math.Pow(lo - coordinate.Longitude, 2) + Math.Pow(la - coordinate.Latitude, 2));
             var checkRadius = (double lo, double la) => calculateDistance(lo, la) <= radius;
             return _context.Hotels
-                .Where(hotel => checkRadius(hotel.Longitude, hotel.Latitude))
-                .OrderBy(hotel => calculateDistance(hotel.Longitude, hotel.Latitude))
+                .Where(hotel => checkRadius(coordinate.Longitude, coordinate.Latitude))
+                .OrderBy(hotel => calculateDistance(coordinate.Longitude, coordinate.Latitude))
                 .AsAsyncEnumerable();
         }
 
-        public Task<HotelModel> GetBestHotel(Coordinate coordinate, double radius)
+        //TODO Возможно такое решение?
+        public async Task<HotelModel> GetBestHotel(Coordinate coordinate, double radius,
+            CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            double CalculateDistance(double lo, double la)
+                => Math.Sqrt(Math.Pow(lo - coordinate.Longitude, 2) + Math.Pow(la - coordinate.Latitude, 2));
+
+            var checkRadius = (double lo, double la) => CalculateDistance(lo, la) <= radius;
+
+            return await _context.Hotels
+                .Where(hotel => checkRadius(coordinate.Longitude, coordinate.Latitude))
+                .OrderByDescending(hotel => hotel.Rating)
+                .FirstAsync(cancellationToken);
         }
 
         public Task<HotelModel> GetNearestHotel(Coordinate coordinate)
@@ -53,6 +69,19 @@ namespace HBS.Data.Repositories
             // var b = a.OrderBy(hotel => calculateDistance(hotel.Longitude, hotel.Latitude)).First();
             // return b;
             throw new NotImplementedException();
+        }
+
+        //TODO Возможно такое решение?
+        public async Task<HotelModel> GetNearestHotel(Coordinate coordinate, double radius,
+            CancellationToken cancellationToken)
+        {
+            var calculateDistance = (double lo, double la) =>
+                Math.Sqrt(Math.Pow(lo - coordinate.Longitude, 2) + Math.Pow(la - coordinate.Latitude, 2));
+            var checkRadius = (double lo, double la) => calculateDistance(lo, la) <= radius;
+            return await _context.Hotels
+                .Where(hotel => checkRadius(coordinate.Longitude, coordinate.Latitude))
+                .OrderBy(hotel => calculateDistance(coordinate.Longitude, coordinate.Latitude))
+                .FirstAsync(cancellationToken);
         }
     }
 }
