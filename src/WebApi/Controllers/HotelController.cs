@@ -7,7 +7,6 @@ namespace WebApi.Controllers;
 
 //TODO CREATE HEALTHCHECK (Попросили проверить, живой ли сервис)
 [ApiController]
-[Route("/hotels")]
 public class HotelController : ControllerBase
 {
     private readonly IHotelManager _hotelManager;
@@ -16,8 +15,14 @@ public class HotelController : ControllerBase
     {
         _hotelManager = hotelManager;
     }
+
+    [HttpGet("/live")]
+    public async Task GetLiveStatus()
+    {
+        await Response.WriteAsync("I am a Live");
+    }
     
-    [HttpGet]
+    [HttpGet("/nearby")]
     public ActionResult<IAsyncEnumerable<HotelModel>> GetNearbyHotels([FromQuery] Coordinate coordinate)
     {
         return Ok();

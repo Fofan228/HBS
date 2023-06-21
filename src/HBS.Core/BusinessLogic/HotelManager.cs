@@ -5,67 +5,61 @@ using HBS.Core.Models;
 
 using Microsoft.Extensions.Logging;
 
-namespace HBS.Core.BusinessLogic
+namespace HBS.Core.BusinessLogic;
+
+public class HotelManager : IHotelManager
 {
-    //TODO Если будете отказываться от моего решения, то снизу оставил пометки, где необходимо их исправить.
-    public class HotelManager : IHotelManager
+    private readonly IHotelRepository _hotelRepository;
+    private readonly ILogger<HotelManager> _logger;
+
+    public HotelManager(IHotelRepository hotelRepository, ILogger<HotelManager> logger)
     {
-        private readonly IHotelRepository _hotelRepository;
-        private readonly ILogger<HotelManager> _logger;
+        _hotelRepository = hotelRepository;
+        _logger = logger;
+    }
 
-        public HotelManager(IHotelRepository hotelRepository, ILogger<HotelManager> logger)
+    public async IAsyncEnumerable<HotelModel> GetNearbyHotels(Coordinate coordinate, double radius,
+        [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        var hotels = _hotelRepository.GetNearbyHotels(coordinate, radius);
+        var hotelsCount = 0;
+        await foreach (var hotel in hotels.WithCancellation(cancellationToken))
         {
-            _hotelRepository = hotelRepository;
-            _logger = logger;
+            yield return hotel;
+            hotelsCount++;
         }
 
-        public async IAsyncEnumerable<HotelModel> GetNearbyHotels(Coordinate coordinate, double radius,
-            [EnumeratorCancellation] CancellationToken cancellationToken)
-        {
-            //TODO
-            var hotels = _hotelRepository.GetNearbyHotels(coordinate, radius);
-            var hotelsCount = 0;
-            await foreach (var hotel in hotels.WithCancellation(cancellationToken))
-            {
-                yield return hotel;
-                hotelsCount++;
-            }
+        _logger.LogInformation("return list hotels {hotelsCount} pics", hotelsCount);
+    }
 
-            _logger.LogInformation("return list hotels {hotelsCount} pics", hotelsCount);
+    public async IAsyncEnumerable<HotelModel> GetHotelsByRating(
+        Coordinate coordinate, double radius,
+        [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        var hotels = _hotelRepository.GetHotelsByRating(coordinate, radius);
+        var hotelsCount = 0;
+        await foreach (var hotel in hotels.WithCancellation(cancellationToken))
+        {
+            yield return hotel;
+            hotelsCount++;
         }
 
-        public async IAsyncEnumerable<HotelModel> GetHotelsByRating(
-            Coordinate coordinate, double radius,
-            [EnumeratorCancellation] CancellationToken cancellationToken)
-        {
-            //TODO
-            var hotels = _hotelRepository.GetHotelsByRating(coordinate, radius);
-            var hotelsCount = 0;
-            await foreach (var hotel in hotels.WithCancellation(cancellationToken))
-            {
-                yield return hotel;
-                hotelsCount++;
-            }
+        _logger.LogInformation("return ordered list hotels by rating {hotelsCount} pics", hotelsCount);
+    }
 
-            _logger.LogInformation("return ordered list hotels by rating {hotelsCount} pics", hotelsCount);
-        }
+    public async Task<HotelModel> GetBestHotel(Coordinate coordinate, double radius,
+        CancellationToken cancellationToken)
+    {
+        var hotel = await _hotelRepository.GetBestHotel(coordinate, radius, cancellationToken);
+        _logger.LogInformation("return best hotel {hotel}", hotel);
+        return hotel;
+    }
 
-        public async Task<HotelModel> GetBestHotel(Coordinate coordinate, double radius,
-            CancellationToken cancellationToken)
-        {
-            //TODO
-            var hotel = await _hotelRepository.GetBestHotel(coordinate, radius, cancellationToken);
-            _logger.LogInformation("return best hotel {hotel}", hotel);
-            return hotel;
-        }
-
-        public async Task<HotelModel> GetNearestHotel(Coordinate coordinate, double radius,
-            CancellationToken cancellationToken)
-        {
-            //TODO
-            var hotel = await _hotelRepository.GetNearestHotel(coordinate, radius, cancellationToken);
-            _logger.LogInformation("return nearest hotel {hotel}", hotel);
-            return hotel;
-        }
+    public async Task<HotelModel> GetNearestHotel(Coordinate coordinate, double radius,
+        CancellationToken cancellationToken)
+    {
+        var hotel = await _hotelRepository.GetNearestHotel(coordinate, radius, cancellationToken);
+        _logger.LogInformation("return nearest hotel {hotel}", hotel);
+        return hotel;
     }
 }
