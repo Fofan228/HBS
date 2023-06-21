@@ -1,7 +1,9 @@
-using HBS.Core.Models;
+using System.Reflection;
+using System.Globalization;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using HBS.Core.Entities;
 
 namespace HBS.Data;
 
@@ -9,14 +11,24 @@ public class HotelContext : DbContext
 {
     public const string ConnectionStringName = "HotelDb";
 
-    public HotelContext(DbContextOptions options) : base(options)
+    public HotelContext(DbContextOptions options) : base(options) { }
+
+    public DbSet<Hotel> Hotels { get; set; } = null!;
+
+    public static void Configure(
+        DbContextOptionsBuilder optionsBuilder,
+        IConfiguration configuration,
+        Assembly? migrationAssembly = null)
     {
+        optionsBuilder.UseNpgsql(configuration.GetConnectionString(ConnectionStringName), b =>
+        {
+            if (migrationAssembly != null) b.MigrationsAssembly(migrationAssembly.FullName);
+        })
+        .UseCamelCaseNamingConvention(CultureInfo.InvariantCulture);
     }
 
-    public DbSet<HotelModel> Hotels { get; set; }
-
-    public static void Configure(DbContextOptionsBuilder optionsBuilder, IConfiguration configuration)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        optionsBuilder.UseNpgsql(configuration.GetConnectionString(ConnectionStringName));
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(HotelContext).Assembly);
     }
 }

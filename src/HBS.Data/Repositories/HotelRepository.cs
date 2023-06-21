@@ -1,5 +1,5 @@
-using HBS.Core.Common.Repositories.Interfaces;
-using HBS.Core.Models;
+using HBS.Core.Entities;
+using HBS.Core.Repositories.Interfaces;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -14,53 +14,13 @@ public class HotelRepository : IHotelRepository
         _context = context;
     }
 
-    public IAsyncEnumerable<HotelModel> GetHotelsByRating(Coordinate coordinate, double radius)
+    public async Task<Hotel?> GetById(long id, CancellationToken token)
     {
-        double CalculateDistance(double lo, double la)
-            => Math.Sqrt(Math.Pow(lo - coordinate.Longitude, 2) + Math.Pow(la - coordinate.Latitude, 2));
-
-        var checkRadius = (double lo, double la) => CalculateDistance(lo, la) <= radius;
-
-        return _context.Hotels
-            .Where(hotel => checkRadius(coordinate.Longitude, coordinate.Latitude))
-            .OrderByDescending(hotel => hotel.Rating)
-            .AsAsyncEnumerable();
+        return await _context.Hotels.Where(h => h.Id == id).FirstOrDefaultAsync(token);
     }
 
-    public IAsyncEnumerable<HotelModel> GetNearbyHotels(Coordinate coordinate, double radius)
+    public IAsyncEnumerable<Hotel> ListHotels()
     {
-        var calculateDistance = (double lo, double la) =>
-            Math.Sqrt(Math.Pow(lo - coordinate.Longitude, 2) + Math.Pow(la - coordinate.Latitude, 2));
-        var checkRadius = (double lo, double la) => calculateDistance(lo, la) <= radius;
-        return _context.Hotels
-            .Where(hotel => checkRadius(coordinate.Longitude, coordinate.Latitude))
-            .OrderBy(hotel => calculateDistance(coordinate.Longitude, coordinate.Latitude))
-            .AsAsyncEnumerable();
-    }
-
-    public async Task<HotelModel> GetBestHotel(Coordinate coordinate, double radius,
-        CancellationToken cancellationToken)
-    {
-        double CalculateDistance(double lo, double la)
-            => Math.Sqrt(Math.Pow(lo - coordinate.Longitude, 2) + Math.Pow(la - coordinate.Latitude, 2));
-
-        var checkRadius = (double lo, double la) => CalculateDistance(lo, la) <= radius;
-
-        return await _context.Hotels
-            .Where(hotel => checkRadius(coordinate.Longitude, coordinate.Latitude))
-            .OrderByDescending(hotel => hotel.Rating)
-            .FirstAsync(cancellationToken);
-    }
-
-    public async Task<HotelModel> GetNearestHotel(Coordinate coordinate, double radius,
-        CancellationToken cancellationToken)
-    {
-        var calculateDistance = (double lo, double la) =>
-            Math.Sqrt(Math.Pow(lo - coordinate.Longitude, 2) + Math.Pow(la - coordinate.Latitude, 2));
-        var checkRadius = (double lo, double la) => calculateDistance(lo, la) <= radius;
-        return await _context.Hotels
-            .Where(hotel => checkRadius(coordinate.Longitude, coordinate.Latitude))
-            .OrderBy(hotel => calculateDistance(coordinate.Longitude, coordinate.Latitude))
-            .FirstAsync(cancellationToken);
+        return _context.Hotels.AsAsyncEnumerable();
     }
 }

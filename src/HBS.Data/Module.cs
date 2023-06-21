@@ -1,8 +1,7 @@
 using HBS.Data.Repositories;
-using HBS.Core.Common.Repositories.Interfaces;
-
-using Microsoft.Extensions.Configuration;
+using HBS.Core.Repositories.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 namespace HBS.Data;
 

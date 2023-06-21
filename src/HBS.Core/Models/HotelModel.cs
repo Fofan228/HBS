@@ -1,21 +1,41 @@
+using HBS.Core.Entities;
+
 namespace HBS.Core.Models;
 
 public class HotelModel
 {
-    public HotelModel(long id, string address, string hotelName, double rating, Coordinate coordinate)
+    public HotelModel(long id, double rating, Coordinates coordinates, string name, string address, string shortDescription, string longDescription, string[] photos, int roomsAvailable, decimal maxPrice, decimal minPrice)
     {
         Id = id;
-        Address = address;
-        HotelName = hotelName;
         Rating = rating;
-        Coordinate = coordinate;
+        Coordinates = coordinates;
+        Name = name;
+        Address = address;
+        ShortDescription = shortDescription;
+        LongDescription = longDescription;
+        Photos = photos;
+        RoomsAvailable = roomsAvailable;
+        MaxPrice = maxPrice;
+        MinPrice = minPrice;
     }
-
-    private HotelModel() { }
+    #region From Database
 
     public long Id { get; set; }
-    public string Address { get; set; } = null!;
-    public string HotelName { get; set; } = null!;
     public double Rating { get; set; }
-    public Coordinate Coordinate { get; set; }
+    public Coordinates Coordinates { get; set; }
+    public string Name { get; set; }
+    public string Address { get; set; }
+    public string ShortDescription { get; set; }
+    public string LongDescription { get; set; }
+    public string[] Photos { get; set; }
+
+    #endregion
+
+    #region From HotelRoomService
+
+    public int RoomsAvailable { get; set; }
+    public decimal MaxPrice { get; set; }
+    public decimal MinPrice { get; set; }
+
+    #endregion
 }
