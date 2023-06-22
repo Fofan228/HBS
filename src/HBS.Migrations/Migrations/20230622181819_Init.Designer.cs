@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HBS.Migrations.Migrations
 {
     [DbContext(typeof(HotelContext))]
-    [Migration("20230621210111_Init")]
+    [Migration("20230622181819_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -37,6 +37,11 @@ namespace HBS.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("address");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("city");
 
                     b.Property<string>("LongDescription")
                         .IsRequired()

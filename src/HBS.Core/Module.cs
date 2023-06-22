@@ -17,8 +17,7 @@ public static class Module
     {
         {
             services.AddScoped<IHotelManager, HotelManager>();
-            //services.AddRefit(configuration);
-            services.AddRefitMocks();
+            services.AddRefit(configuration);
             return services;
         }
     }
@@ -35,19 +34,14 @@ public static class Module
         if (string.IsNullOrWhiteSpace(hotelRoomServiceConnectionString))
             throw new NullReferenceException();
 
-        services.AddRefitClient<IBookingService>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri(bookingServiceConnectionString));
+        // services.AddRefitClient<IBookingService>()
+        //     .ConfigureHttpClient(c => c.BaseAddress = new Uri(bookingServiceConnectionString));
+
+        services.AddScoped<IBookingService, BookingServiceMock>();
 
         services.AddRefitClient<IHotelRoomService>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(hotelRoomServiceConnectionString));
 
-        return services;
-    }
-
-    public static IServiceCollection AddRefitMocks(this IServiceCollection services)
-    {
-        services.AddScoped<IBookingService, BookingServiceMock>();
-        services.AddScoped<IHotelRoomService, HotelRoomServiceMock>();
         return services;
     }
 }

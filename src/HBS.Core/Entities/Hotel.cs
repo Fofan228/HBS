@@ -2,7 +2,7 @@ namespace HBS.Core.Entities;
 
 public sealed class Hotel
 {
-    public Hotel(long id, double rating, Coordinates coordinates, string name, string address, string shortDescription, string longDescription, string[] photos)
+    public Hotel(long id, double rating, Coordinates coordinates, string name, string address, string shortDescription, string longDescription, string[] photos, string city)
     {
         Id = id;
         Rating = rating;
@@ -12,6 +12,7 @@ public sealed class Hotel
         ShortDescription = shortDescription;
         LongDescription = longDescription;
         Photos = photos;
+        City = city;
     }
 
     private Hotel() { }
@@ -24,4 +25,5 @@ public sealed class Hotel
     public string ShortDescription { get; set; } = null!;
     public string LongDescription { get; set; } = null!;
     public string[] Photos { get; set; } = null!;
+    public string City { get; set; } = null!;
 }
