@@ -7,8 +7,6 @@ namespace HBS.Core.Web.Interfaces;
 
 public interface IBookingService
 {
-    [Get("/availableRooms")]
-    Task<ICollection<HotelRoomAvailableInfo>> GetAvailableRoomsAsync(
-        IEnumerable<Coordinates> coordinates,
-        CancellationToken token);
+    [Get("/availableRooms?coordinates={coordinates}")]
+    Task<ICollection<HotelRoomAvailableInfo>> GetAvailableRoomsAsync(IEnumerable<Coordinates> coordinates);
 }

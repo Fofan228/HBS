@@ -1,11 +1,10 @@
-using System.Runtime.CompilerServices;
-
 using Dumpify;
 
 using HBS.Core.Entities;
 using HBS.Core.Models;
 using HBS.Core.Repositories.Interfaces;
 using HBS.Core.Web.Interfaces;
+using HBS.Core.Web.Models;
 
 using Microsoft.Extensions.Logging;
 
@@ -35,27 +34,30 @@ public class HotelManager : IHotelManager
         var hotel = await _hotelRepository.GetById(id, token);
         if (hotel is null) return null;
 
-        var roomsAvailable = (await _bookingService.GetAvailableRoomsAsync(new[] { hotel.Coordinates }, token))
-            .FirstOrDefault();
-        if (roomsAvailable is null) return null;
+        HotelRoomAvailableInfo? roomsAvailable;
+        HotelRoomPricesInfo? roomsInfo;
 
+        try
+        {
+            roomsAvailable = (await _bookingService.GetAvailableRoomsAsync(new[] { hotel.Coordinates }))
+                .FirstOrDefault();
 
-        var roomsInfo = (await _hotelRoomService.GetRoomsInfoAsync(new[] { hotel.Coordinates }, token))
-            .FirstOrDefault();
-        if (roomsInfo is null) return null;
+            roomsInfo = (await _hotelRoomService.GetRoomsInfoAsync(new[] { hotel.Coordinates }))
+                .FirstOrDefault();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while getting hotel {id}", id);
+            return null;
+        }
 
-        var hotelModel = new HotelModel(
-            hotel.Id,
-            hotel.Rating,
-            hotel.Coordinates,
-            hotel.Name,
-            hotel.Address,
-            hotel.ShortDescription,
-            hotel.LongDescription,
-            hotel.Photos,
-            roomsAvailable.RoomsAvailable,
-            roomsInfo.MaxPrice,
-            roomsInfo.MinPrice);
+        if (roomsAvailable is null || roomsInfo is null)
+        {
+            _logger.LogError("Error while getting hotel {id}", id);
+            return null;
+        }
+
+        var hotelModel = HotelModel.Create(hotel, roomsInfo, roomsAvailable);
 
         _logger.LogInformation("Hotel with {id} was found\n{hotel}", id, hotelModel.DumpText());
 
@@ -68,23 +70,35 @@ public class HotelManager : IHotelManager
     {
         var hotels = await _hotelRepository.ListHotels().ToListAsync(token);
         var hotelCoordinates = hotels.ConvertAll(h => h.Coordinates);
-        var roomsAvailable = (await _bookingService.GetAvailableRoomsAsync(hotelCoordinates, token))
-            .ToDictionary(r => r.Coordinates, r => r);
-        var roomsInfo = (await _hotelRoomService.GetRoomsInfoAsync(hotelCoordinates, token))
-            .ToDictionary(r => r.Coordinates, r => r);
 
-        var hotelModels = hotels.Select(hotel => new HotelModel(
-            hotel.Id,
-            hotel.Rating,
-            hotel.Coordinates,
-            hotel.Name,
-            hotel.Address,
-            hotel.ShortDescription,
-            hotel.LongDescription,
-            hotel.Photos,
-            roomsAvailable[hotel.Coordinates].RoomsAvailable,
-            roomsInfo[hotel.Coordinates].MaxPrice,
-            roomsInfo[hotel.Coordinates].MinPrice));
+        Dictionary<Coordinates, HotelRoomAvailableInfo> roomsAvailable;
+        Dictionary<Coordinates, HotelRoomPricesInfo> roomsInfo;
+
+        try
+        {
+            roomsAvailable = (await _bookingService.GetAvailableRoomsAsync(hotelCoordinates))
+                            .ToDictionary(r => r.Coordinates, r => r);
+            roomsInfo = (await _hotelRoomService.GetRoomsInfoAsync(hotelCoordinates))
+                            .ToDictionary(r => r.Coordinates, r => r);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error while getting rooms info");
+            return Enumerable.Empty<HotelModel>();
+        }
+
+        var hotelModels = new List<HotelModel>();
+        foreach (var hotel in hotels)
+        {
+            if (!roomsAvailable.TryGetValue(hotel.Coordinates, out var ra) ||
+                !roomsInfo.TryGetValue(hotel.Coordinates, out var ri))
+            {
+                _logger.LogError("Error while getting rooms info for hotel: {id}", hotel.Id);
+                continue;
+            }
+
+            hotelModels.Add(HotelModel.Create(hotel, ri, ra));
+        }
 
         return order switch
         {

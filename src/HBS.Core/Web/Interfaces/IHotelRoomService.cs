@@ -7,8 +7,6 @@ namespace HBS.Core.Web.Interfaces;
 
 public interface IHotelRoomService
 {
-    [Get("/roomsInfo")]
-    Task<ICollection<HotelRoomPricesInfo>> GetRoomsInfoAsync(
-        IEnumerable<Coordinates> coordinates,
-        CancellationToken token);
+    [Get("/roomsInfo?coordinates={coordinates}")]
+    Task<ICollection<HotelRoomPricesInfo>> GetRoomsInfoAsync(IEnumerable<Coordinates> coordinates);
 }

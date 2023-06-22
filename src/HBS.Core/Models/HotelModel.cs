@@ -1,4 +1,5 @@
 using HBS.Core.Entities;
+using HBS.Core.Web.Models;
 
 namespace HBS.Core.Models;
 
@@ -38,4 +39,20 @@ public class HotelModel
     public decimal MinPrice { get; set; }
 
     #endregion
+
+    public static HotelModel Create(Hotel hotel, HotelRoomPricesInfo prices, HotelRoomAvailableInfo rooms)
+    {
+        return new(
+            hotel.Id,
+            hotel.Rating,
+            hotel.Coordinates,
+            hotel.Name,
+            hotel.Address,
+            hotel.ShortDescription,
+            hotel.LongDescription,
+            hotel.Photos,
+            rooms.RoomsAvailable,
+            prices.MaxPrice,
+            prices.MinPrice);
+    }
 }
