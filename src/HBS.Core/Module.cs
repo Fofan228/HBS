@@ -17,8 +17,8 @@ public static class Module
     {
         {
             services.AddScoped<IHotelManager, HotelManager>();
-            services.AddRefit(configuration);
-            //services.AddRefitMocks();
+            //services.AddRefit(configuration);
+            services.AddRefitMocks();
             return services;
         }
     }
