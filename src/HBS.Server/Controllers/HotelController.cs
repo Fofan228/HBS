@@ -20,9 +20,12 @@ public class HotelController : ApiController
     }
 
     [HttpGet("all")]
-    public async Task<ActionResult<IEnumerable<HotelModel>>> ListHotels(HotelOrdering order, CancellationToken token)
+    public async Task<ActionResult<IEnumerable<HotelModel>>> ListHotels(
+        [FromQuery] HotelOrdering order, 
+        [FromQuery] string city,
+        CancellationToken token)
     {
-        var hotels = await _hotelManager.ListHotelsAsync(order, token);
+        var hotels = await _hotelManager.ListHotelsAsync(order, city, token);
         hotels.Dump();
         return Ok(hotels);
     }

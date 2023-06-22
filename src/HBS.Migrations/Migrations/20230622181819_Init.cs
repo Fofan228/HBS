@@ -24,7 +24,8 @@ namespace HBS.Migrations.Migrations
                     address = table.Column<string>(type: "text", nullable: false),
                     shortDescription = table.Column<string>(type: "text", nullable: false),
                     longDescription = table.Column<string>(type: "text", nullable: false),
-                    photos = table.Column<string[]>(type: "text[]", nullable: false)
+                    photos = table.Column<string[]>(type: "text[]", nullable: false),
+                    city = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

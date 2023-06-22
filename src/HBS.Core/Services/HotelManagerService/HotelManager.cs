@@ -39,11 +39,11 @@ public class HotelManager : IHotelManager
 
         try
         {
+            roomsInfo = (await _hotelRoomService.GetHotel(hotel.Coordinates.Longitude, hotel.Coordinates.Latitude))?.Hotel;
+            _logger.LogInformation("{hotel}", roomsInfo.DumpText());
             roomsAvailable = (await _bookingService.GetAvailableRoomsAsync(new[] { hotel.Coordinates }))
                 .FirstOrDefault();
 
-            roomsInfo = (await _hotelRoomService.GetRoomsInfoAsync(new[] { hotel.Coordinates }))
-                .FirstOrDefault();
         }
         catch (Exception ex)
         {
@@ -66,9 +66,12 @@ public class HotelManager : IHotelManager
 
     public async Task<IEnumerable<HotelModel>> ListHotelsAsync(
         HotelOrdering order,
+        string city,
         CancellationToken token)
     {
-        var hotels = await _hotelRepository.ListHotels().ToListAsync(token);
+        var hotels = await _hotelRepository.ListHotels()
+            .Where(h => h.City.Equals(city, StringComparison.OrdinalIgnoreCase))
+            .ToListAsync(token);
         var hotelCoordinates = hotels.ConvertAll(h => h.Coordinates);
 
         Dictionary<Coordinates, HotelRoomAvailableInfo> roomsAvailable;
@@ -76,9 +79,10 @@ public class HotelManager : IHotelManager
 
         try
         {
+            roomsInfo = (await _hotelRoomService.GetHotels()).Hotels
+                            .ToDictionary(r => new Coordinates(r.Longitude, r.Latitude), r => r);
+            _logger.LogInformation("{rooms}", roomsInfo.DumpText());
             roomsAvailable = (await _bookingService.GetAvailableRoomsAsync(hotelCoordinates))
-                            .ToDictionary(r => r.Coordinates, r => r);
-            roomsInfo = (await _hotelRoomService.GetRoomsInfoAsync(hotelCoordinates))
                             .ToDictionary(r => r.Coordinates, r => r);
         }
         catch (Exception e)

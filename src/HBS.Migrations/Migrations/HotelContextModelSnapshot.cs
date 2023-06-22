@@ -35,6 +35,11 @@ namespace HBS.Migrations.Migrations
                         .HasColumnType("text")
                         .HasColumnName("address");
 
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("city");
+
                     b.Property<string>("LongDescription")
                         .IsRequired()
                         .HasColumnType("text")

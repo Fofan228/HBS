@@ -5,7 +5,7 @@ namespace HBS.Core.Models;
 
 public class HotelModel
 {
-    public HotelModel(long id, double rating, Coordinates coordinates, string name, string address, string shortDescription, string longDescription, string[] photos, int roomsAvailable, decimal maxPrice, decimal minPrice)
+    public HotelModel(long id, double rating, Coordinates coordinates, string name, string address, string shortDescription, string longDescription, string[] photos, int roomsAvailable, decimal maxPrice, decimal minPrice, string city)
     {
         Id = id;
         Rating = rating;
@@ -18,6 +18,7 @@ public class HotelModel
         RoomsAvailable = roomsAvailable;
         MaxPrice = maxPrice;
         MinPrice = minPrice;
+        City = city;
     }
     #region From Database
 
@@ -29,6 +30,7 @@ public class HotelModel
     public string ShortDescription { get; set; }
     public string LongDescription { get; set; }
     public string[] Photos { get; set; }
+    public string City { get; set; }
 
     #endregion
 
@@ -53,6 +55,7 @@ public class HotelModel
             hotel.Photos,
             rooms.RoomsAvailable,
             prices.MaxPrice,
-            prices.MinPrice);
+            prices.MinPrice,
+            hotel.City);
     }
 }

@@ -1,5 +1,3 @@
-using HBS.Core.Entities;
-
 namespace HBS.Core.Web.Models;
 
-public record HotelRoomPricesInfo(Coordinates Coordinates, decimal MinPrice, decimal MaxPrice);
+public record HotelRoomPricesInfo(double Longitude, double Latitude, decimal MinPrice, decimal MaxPrice);
