@@ -1,6 +1,5 @@
 using HBS.Core.Services.HotelManagerService;
 using HBS.Core.Web.Interfaces;
-using HBS.Core.Web.Mocks;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,10 +33,8 @@ public static class Module
         if (string.IsNullOrWhiteSpace(hotelRoomServiceConnectionString))
             throw new NullReferenceException();
 
-        // services.AddRefitClient<IBookingService>()
-        //     .ConfigureHttpClient(c => c.BaseAddress = new Uri(bookingServiceConnectionString));
-
-        services.AddScoped<IBookingService, BookingServiceMock>();
+         services.AddRefitClient<IBookingService>()
+             .ConfigureHttpClient(c => c.BaseAddress = new Uri(bookingServiceConnectionString));
 
         services.AddRefitClient<IHotelRoomService>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(hotelRoomServiceConnectionString));

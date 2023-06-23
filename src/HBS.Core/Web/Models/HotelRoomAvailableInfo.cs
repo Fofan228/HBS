@@ -2,4 +2,4 @@ using HBS.Core.Entities;
 
 namespace HBS.Core.Web.Models;
 
-public record HotelRoomAvailableInfo(Coordinates Coordinates, int RoomsAvailable);
+public record HotelRoomAvailableInfo(Coordinates Coordinates, int Available);

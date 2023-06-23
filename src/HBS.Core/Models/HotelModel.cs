@@ -53,7 +53,7 @@ public class HotelModel
             hotel.ShortDescription,
             hotel.LongDescription,
             hotel.Photos,
-            rooms.RoomsAvailable,
+            rooms.Available,
             prices.MaxPrice,
             prices.MinPrice,
             hotel.City);
