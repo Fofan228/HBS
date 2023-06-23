@@ -10,6 +10,7 @@ var services = builder.Services;
     services.AddControllers();
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
+    services.AddHealthChecks();
 }
 
 var app = builder.Build();
@@ -17,6 +18,7 @@ var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseExceptionHandler("/error");
+    app.UseHealthChecks("/health");
     app.MapControllers();
 }
 

@@ -41,9 +41,7 @@ public class HotelManager : IHotelManager
         {
             roomsInfo = (await _hotelRoomService.GetHotel(hotel.Coordinates.Longitude, hotel.Coordinates.Latitude))?.Hotel;
             _logger.LogInformation("{hotel}", roomsInfo.DumpText());
-            roomsAvailable = (await _bookingService.GetAvailableRoomsAsync(new[] { hotel.Coordinates }))
-                .FirstOrDefault();
-
+            roomsAvailable = await _bookingService.GetAvailableRoomsAsync(hotel.Coordinates.Longitude, hotel.Coordinates.Latitude);
         }
         catch (Exception ex)
         {
@@ -82,7 +80,7 @@ public class HotelManager : IHotelManager
             roomsInfo = (await _hotelRoomService.GetHotels()).Hotels
                             .ToDictionary(r => new Coordinates(r.Longitude, r.Latitude), r => r);
             _logger.LogInformation("{rooms}", roomsInfo.DumpText());
-            roomsAvailable = (await _bookingService.GetAvailableRoomsAsync(hotelCoordinates))
+            roomsAvailable = (await _bookingService.GetAllAvailableRoomsAsync())
                             .ToDictionary(r => r.Coordinates, r => r);
         }
         catch (Exception e)
